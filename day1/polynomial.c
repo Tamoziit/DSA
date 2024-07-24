@@ -81,25 +81,27 @@ void add(Term x, Term y)
 
 void multiply(Term x, Term y)
 {
-    int t1, t2, t3, t4;;
+    int t1, t2, t3, t4;
+    ;
     int ex_res, ey_res;
-    t1=x.cx*y.cx;
-    t2=x.cx*y.cy;
-    t3=x.cy*y.cx;
-    t4=x.cy*y.cy;
-    ex_res=x.ex+y.ex;
-    ey_res=x.ey+y.ey;
+    t1 = x.cx * y.cx;
+    t2 = x.cx * y.cy;
+    t3 = x.cy * y.cx;
+    t4 = x.cy * y.cy;
+    ex_res = x.ex + y.ex;
+    ey_res = x.ey + y.ey;
     printf("Result 2 = %dx^%d %dx^%d.y^%d %dx^%d.y^%d %dy^%d\n", t1, ex_res, t2, x.ex, y.ey, t3, x.ex, y.ey, t4, ey_res);
 }
 
-int main() {
+int main()
+{
     Term x, y;
     printf("Enter first term (cx ex cy ey): \n");
     scanf("%d %d %d %d", &x.cx, &x.ex, &x.cy, &x.ey);
-    
+
     printf("Enter second term (cx ex cy ey): \n");
     scanf("%d %d %d %d", &y.cx, &y.ex, &y.cy, &y.ey);
-    
+
     add(x, y);
     multiply(x, y);
     return 0;
