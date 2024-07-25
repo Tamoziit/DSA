@@ -1,108 +1,126 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct term
+typedef struct polynomial
 {
-    int cx;
-    int cy;
+    int c;
     int ex;
     int ey;
-};
+} Term;
 
-typedef struct term Term;
+int k;
 
-void add(Term x, Term y)
+Term *sort(Term *p, int n)
 {
-    int resx = -99999, resy = -99999; // Initialize with sentinel values
-    int ex_res = -99999, ey_res = -99999;
-
-    // If the exponents of x are equal
-    if (x.ex == y.ex)
+    int i, j;
+    Term t;
+    for (i = 0; i < n - 1; i++)
     {
-        resx = x.cx + y.cx;
-        ex_res = x.ex;
+        for (j = 0; j < n - 1 - i; j++)
+        {
+            if ((p[j].ex > p[j + 1].ex) || (p[j].ex == p[j + 1].ex && p[j].ey > p[j + 1].ey))
+            {
+                t = p[j];
+                p[j] = p[j + 1];
+                p[j + 1] = t;
+            }
+        }
     }
-
-    // If the exponents of y are equal
-    if (x.ey == y.ey)
-    {
-        resy = x.cy + y.cy;
-        ey_res = x.ey;
-    }
-
-    // Handling different cases for the addition
-    if (resx != -99999 && resy != -99999)
-    {
-        if (resy >= 0)
-            printf("Result = %dx^%d + %dy^%d\n", resx, ex_res, resy, ey_res);
-        else
-            printf("Result = %dx^%d %dy^%d\n", resx, ex_res, resy, ey_res);
-    }
-    else if (resx != -99999)
-    {
-        if (x.cy >= 0 && y.cy >= 0)
-            printf("Result = %dx^%d + %dy^%d + %dy^%d\n", resx, ex_res, x.cy, x.ey, y.cy, y.ey);
-        else if (x.cy >= 0)
-            printf("Result = %dx^%d + %dy^%d %dy^%d\n", resx, ex_res, x.cy, x.ey, y.cy, y.ey);
-        else
-            printf("Result = %dx^%d %dy^%d + %dy^%d\n", resx, ex_res, x.cy, x.ey, y.cy, y.ey);
-    }
-    else if (resy != -99999)
-    {
-        if (x.cx >= 0 && y.cx >= 0)
-            printf("Result = %dx^%d + %dx^%d + %dy^%d\n", x.cx, x.ex, y.cx, y.ex, resy, ey_res);
-        else if (x.cx >= 0)
-            printf("Result = %dx^%d + %dx^%d %dy^%d\n", x.cx, x.ex, y.cx, y.ex, resy, ey_res);
-        else
-            printf("Result = %dx^%d %dx^%d + %dy^%d\n", x.cx, x.ex, y.cx, y.ex, resy, ey_res);
-    }
-    else
-    {
-        if (x.cx >= 0 && x.cy >= 0 && y.cx >= 0 && y.cy >= 0)
-            printf("Result = %dx^%d + %dy^%d + %dx^%d + %dy^%d\n", x.cx, x.ex, x.cy, x.ey, y.cx, y.ex, y.cy, y.ey);
-        else if (x.cx >= 0 && x.cy >= 0 && y.cx >= 0)
-            printf("Result = %dx^%d + %dy^%d + %dx^%d %dy^%d\n", x.cx, x.ex, x.cy, x.ey, y.cx, y.ex, y.cy, y.ey);
-        else if (x.cx >= 0 && x.cy >= 0 && y.cy >= 0)
-            printf("Result = %dx^%d + %dy^%d %dx^%d + %dy^%d\n", x.cx, x.ex, x.cy, x.ey, y.cx, y.ex, y.cy, y.ey);
-        else if (x.cx >= 0 && y.cx >= 0 && y.cy >= 0)
-            printf("Result = %dx^%d %dy^%d + %dx^%d + %dy^%d\n", x.cx, x.ex, x.cy, x.ey, y.cx, y.ex, y.cy, y.ey);
-        else if (x.cy >= 0 && y.cx >= 0 && y.cy >= 0)
-            printf("Result = %dx^%d + %dy^%d %dx^%d + %dy^%d\n", x.cx, x.ex, x.cy, x.ey, y.cx, y.ex, y.cy, y.ey);
-        else if (x.cx >= 0 && y.cx >= 0)
-            printf("Result = %dx^%d %dy^%d + %dx^%d %dy^%d\n", x.cx, x.ex, x.cy, x.ey, y.cx, y.ex, y.cy, y.ey);
-        else if (x.cx >= 0 && y.cy >= 0)
-            printf("Result = %dx^%d %dy^%d + %dx^%d %dy^%d\n", x.cx, x.ex, x.cy, x.ey, y.cx, y.ex, y.cy, y.ey);
-        else if (x.cy >= 0 && y.cx >= 0)
-            printf("Result = %dx^%d + %dy^%d %dx^%d %dy^%d\n", x.cx, x.ex, x.cy, x.ey, y.cx, y.ex, y.cy, y.ey);
-        else
-            printf("Result = %dx^%d %dy^%d %dx^%d %dy^%d\n", x.cx, x.ex, x.cy, x.ey, y.cx, y.ex, y.cy, y.ey);
-    }
+    return p;
 }
 
-void multiply(Term x, Term y)
+Term *add(Term *p1, Term *p2, int n1, int n2)
 {
-    int t1, t2, t3, t4;
-    ;
-    int ex_res, ey_res;
-    t1 = x.cx * y.cx;
-    t2 = x.cx * y.cy;
-    t3 = x.cy * y.cx;
-    t4 = x.cy * y.cy;
-    ex_res = x.ex + y.ex;
-    ey_res = x.ey + y.ey;
-    printf("Result 2 = %dx^%d %dx^%d.y^%d %dx^%d.y^%d %dy^%d\n", t1, ex_res, t2, x.ex, y.ey, t3, x.ex, y.ey, t4, ey_res);
+    int i, j;
+    k = 0;
+    Term *res = (Term *)malloc((n1 + n2) * sizeof(Term));
+    for (i = 0, j = 0, k = 0; i < n1 && j < n2;)
+    {
+        if ((p1[i].ex == p2[j].ex) && (p1[i].ey == p2[j].ey))
+        {
+            if (p1[i].c + p2[i].c != 0)
+            {
+                res[k].c = p1[i].c + p2[i].c;
+                res[k].ex = p1[i].ex;
+                res[k].ey = p2[j].ey;
+                k++;
+            }
+            i++;
+            j++;
+        }
+        else
+        {
+            if ((p1[i].ex < p2[j].ex) || (p1[i].ex == p2[j].ex && p1[i].ey < p2[j].ey))
+            {
+                res[k] = p1[i];
+                i++;
+                k++;
+            }
+            else
+            {
+                res[k] = p2[j];
+                j++;
+                k++;
+            }
+        }
+    }
+    if (i < n1)
+    {
+        while (i < n1)
+        {
+            res[k] = p1[i];
+            i++;
+            k++;
+        }
+    }
+    else if (j < n2)
+    {
+        while (j < n2)
+        {
+            res[k] = p2[j];
+            j++;
+            k++;
+        }
+    }
+    return res;
 }
 
 int main()
 {
-    Term x, y;
-    printf("Enter first term (cx ex cy ey): \n");
-    scanf("%d %d %d %d", &x.cx, &x.ex, &x.cy, &x.ey);
+    int n1, n2, i;
+    printf("Enter Sizes\n");
+    scanf("%d%d", &n1, &n2);
+    Term *p1 = (Term *)malloc(n1 * sizeof(Term));
+    Term *p2 = (Term *)malloc(n2 * sizeof(Term));
+    printf("Enter the terms of 1st polynomial\n");
+    for (i = 0; i < n1; i++)
+    {
+        printf("Term %d:\n", (i + 1));
+        scanf("%d%d%d", &p1[i].c, &p1[i].ex, &p1[i].ey);
+    }
+    printf("Enter the terms of 2nd polynomial\n");
+    for (i = 0; i < n2; i++)
+    {
+        printf("Term %d:\n", (i + 1));
+        scanf("%d%d%d", &p2[i].c, &p2[i].ex, &p2[i].ey);
+    }
 
-    printf("Enter second term (cx ex cy ey): \n");
-    scanf("%d %d %d %d", &y.cx, &y.ex, &y.cy, &y.ey);
+    p1 = sort(p1, n1);
+    p2 = sort(p2, n2);
 
-    add(x, y);
-    multiply(x, y);
+    Term *res = (Term *)malloc(k * sizeof(Term));
+    res = add(p1, p2, n1, n2);
+    printf("Result : \n");
+    for (i = 0; i < k; i++)
+    {
+        if (i != k - 1)
+            printf("(%d)x^%d.y^%d + ", res[i].c, res[i].ex, res[i].ey);
+        else
+            printf("(%d)x^%d.y^%d\n", res[i].c, res[i].ex, res[i].ey);
+    }
+
+    free(p1);
+    free(p2);
+    free(res);
     return 0;
 }
