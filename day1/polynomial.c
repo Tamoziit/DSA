@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#define MAXROWS 100
 
 typedef struct polynomial
 {
@@ -85,6 +86,24 @@ Term *add(Term *p1, Term *p2, int n1, int n2)
     return res;
 }
 
+Term *multiply(Term *p1, Term *p2, int n1, int n2)
+{
+    int i, j;
+    k = 0;
+    Term *res = (Term *)malloc((n1 * n2) * sizeof(Term));
+    for (i = 0; i < n1; i++)
+    {
+        for (j = 0; j < n2; j++)
+        {
+            res[k].c = p1[i].c * p2[j].c;
+            res[k].ex = p1[i].ex + p2[j].ex;
+            res[k].ey = p1[i].ey + p2[j].ey;
+            k++;
+        }
+    }
+    return res;
+}
+
 int main()
 {
     int n1, n2, i;
@@ -105,22 +124,51 @@ int main()
         scanf("%d%d%d", &p2[i].c, &p2[i].ex, &p2[i].ey);
     }
 
+    printf("Polynomial 1 : ");
+    for (i = 0; i < n1; i++)
+    {
+        if (i != n1 - 1)
+            printf("(%d)x^%d.y^%d + ", p1[i].c, p1[i].ex, p1[i].ey);
+        else
+            printf("(%d)x^%d.y^%d\n", p1[i].c, p1[i].ex, p1[i].ey);
+    }
+    printf("Polynomial 2 : ");
+    for (i = 0; i < n2; i++)
+    {
+        if (i != n2 - 1)
+            printf("(%d)x^%d.y^%d + ", p2[i].c, p2[i].ex, p2[i].ey);
+        else
+            printf("(%d)x^%d.y^%d\n", p2[i].c, p2[i].ex, p2[i].ey);
+    }
+
     p1 = sort(p1, n1);
     p2 = sort(p2, n2);
 
-    Term *res = (Term *)malloc(k * sizeof(Term));
-    res = add(p1, p2, n1, n2);
+    Term *res1 = (Term *)malloc(MAXROWS * sizeof(Term));
+    res1 = add(p1, p2, n1, n2);
     printf("Result : \n");
     for (i = 0; i < k; i++)
     {
         if (i != k - 1)
-            printf("(%d)x^%d.y^%d + ", res[i].c, res[i].ex, res[i].ey);
+            printf("(%d)x^%d.y^%d + ", res1[i].c, res1[i].ex, res1[i].ey);
         else
-            printf("(%d)x^%d.y^%d\n", res[i].c, res[i].ex, res[i].ey);
+            printf("(%d)x^%d.y^%d\n", res1[i].c, res1[i].ex, res1[i].ey);
+    }
+
+    Term *res2 = (Term *)malloc(MAXROWS * sizeof(Term));
+    res2 = multiply(p1, p2, n1, n2);
+    printf("Result : \n");
+    for (i = 0; i < k; i++)
+    {
+        if (i != k - 1)
+            printf("(%d)x^%d.y^%d + ", res2[i].c, res2[i].ex, res2[i].ey);
+        else
+            printf("(%d)x^%d.y^%d\n", res2[i].c, res2[i].ex, res2[i].ey);
     }
 
     free(p1);
     free(p2);
-    free(res);
+    free(res1);
+    free(res2);
     return 0;
 }
