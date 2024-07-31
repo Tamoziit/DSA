@@ -24,6 +24,27 @@ Node *insertAtBeginning(Node *head, int val)
     return head;
 }
 
+Node* insertAtEnd(Node* head, int val) {
+    Node* new = (Node*)malloc(sizeof(Node));
+    if (new != NULL) {
+        new->data = val;
+        new->link = NULL;
+        if (head == NULL) {
+            head = new;
+        } else {
+            Node* temp = head;
+            while (temp->link != NULL) {
+                temp = temp->link; //traversing the list
+            }
+            temp->link = new; //linking new entry to prev. node
+        }
+    } else {
+        printf("Memory Allocation failed\n");
+        exit(0);
+    }
+    return head;
+}
+
 Node *createInitialList(int num)
 {
     Node *head = NULL;
@@ -83,8 +104,11 @@ int main()
 
     printf("Enter value to insert: ");
     scanf("%d", &value);
-    head = insertAtBeginning(head, value);
 
+    head = insertAtBeginning(head, value);
+    displayList(head);
+
+    head = insertAtEnd(head, value);
     displayList(head);
 
     return 0;
