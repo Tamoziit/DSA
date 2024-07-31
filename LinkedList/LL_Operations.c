@@ -24,21 +24,73 @@ Node *insertAtBeginning(Node *head, int val)
     return head;
 }
 
-Node* insertAtEnd(Node* head, int val) {
-    Node* new = (Node*)malloc(sizeof(Node));
-    if (new != NULL) {
+Node *insertAtEnd(Node *head, int val)
+{
+    Node *new = (Node *)malloc(sizeof(Node));
+    if (new != NULL)
+    {
         new->data = val;
         new->link = NULL;
-        if (head == NULL) {
+        if (head == NULL)
+        {
             head = new;
-        } else {
-            Node* temp = head;
-            while (temp->link != NULL) {
-                temp = temp->link; //traversing the list
-            }
-            temp->link = new; //linking new entry to prev. node
         }
-    } else {
+        else
+        {
+            Node *temp = head;
+            while (temp->link != NULL)
+            {
+                temp = temp->link; // traversing the list
+            }
+            temp->link = new; // linking new entry to prev. node
+        }
+    }
+    else
+    {
+        printf("Memory Allocation failed\n");
+        exit(0);
+    }
+    return head;
+}
+
+Node *insertAtPosition(Node *head, int val, int pos)
+{
+    Node *new = (Node *)malloc(sizeof(Node));
+    if (new != NULL)
+    {
+        new->data = val;
+        new->link = NULL;
+
+        // If inserting at the beginning (position 1)
+        if (pos == 1)
+        {
+            new->link = head;
+            head = new;
+        }
+        else
+        {
+            Node *temp = head;
+            // Traverse to the node before the desired position
+            for (int i = 1; i < pos - 1 && temp != NULL; i++)
+            {
+                temp = temp->link;
+            }
+            // If position is beyond the current list length
+            if (temp == NULL)
+            {
+                printf("Position out of bounds\n");
+                free(new);
+            }
+            else
+            {
+                // Insert the new node
+                new->link = temp->link;
+                temp->link = new; // address of prev node
+            }
+        }
+    }
+    else
+    {
         printf("Memory Allocation failed\n");
         exit(0);
     }
@@ -109,6 +161,12 @@ int main()
     displayList(head);
 
     head = insertAtEnd(head, value);
+    displayList(head);
+
+    int pos;
+    printf("Enter pos & value\n");
+    scanf("%d%d", &pos, &value);
+    head = insertAtPosition(head, value, pos);
     displayList(head);
 
     return 0;
