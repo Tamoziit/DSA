@@ -54,19 +54,18 @@ int main()
         printf("Memory allocation failed\n");
         return 1;
     }
-    int i, ch = 0;
+    int i=0, ch = 0;
     printf("Enter a group of complex nos. Enter -1 to stop, any other no. to continue when prompted.\n");
     while (1)
     {
         scanf("%d%d", &arr[i].real, &arr[i].img);
+        i++;
         printf("Continue?\n");
         scanf("%d", &ch);
         if (ch == -1)
             break;
-        else
-            i++;
     }
-    res2 = multiply_array_Complex(arr, i + 1);
+    res2 = multiply_array_Complex(arr, i);
     if (res2.img >= 0)
     {
         printf("Result 2 = %d + %di\n", res2.real, res2.img);
