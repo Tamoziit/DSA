@@ -42,7 +42,7 @@ Node *insertAtEnd(Node *head, int val)
             Node *curr = head;
             while (curr->link != NULL)
             {
-                curr = temp->link; // traversing the list
+                curr = curr->link; // traversing the list
             }
             curr->link = new; // linking new entry to prev. node
         }
@@ -55,7 +55,7 @@ Node *insertAtEnd(Node *head, int val)
     }
 }
 
-Node *insertAtPosition(Node *head, int val, int pos)
+Node *insertAtPosition(Node *h, int val, int pos)
 {
     Node *curr = h;
     int c = 0;
@@ -141,9 +141,15 @@ int deleteAtPosition(Node **hptr, int pos)
 {
     Node *h = *hptr, *curr = h, *prev = NULL;
     int c = 0, val;
+    if (curr == NULL)
+    {
+        printf("Empty List\n");
+        return INT_MIN;
+    }
     if (pos == 1)
     {
         val = deleteAtBeginning(&h);
+        *hptr = h; // Update the head pointer
         return val;
     }
     while (curr != NULL)
@@ -151,14 +157,18 @@ int deleteAtPosition(Node **hptr, int pos)
         c++;
         if (c == pos)
         {
-            prev->link = curr->link;
+            if (prev != NULL) // Check if prev is not NULL
+            {
+                prev->link = curr->link;
+            }
             val = curr->data;
             free(curr);
+            return val;
         }
         prev = curr;
         curr = curr->link;
     }
-    if (pos > c + 1 || pos <= 0)
+    if (pos > c || pos <= 0)
     {
         printf("Invalid position\n");
         return INT_MIN;
@@ -170,6 +180,11 @@ int deleteByValue(Node **hptr, int key)
 {
     Node *h = *hptr, *curr = h, *prev = NULL;
     int flag = 0, val;
+    if (curr == NULL)
+    {
+        printf("Empty List\n");
+        return INT_MIN;
+    }
     while (curr != NULL)
     {
         if (curr->data == key)
@@ -188,15 +203,42 @@ int deleteByValue(Node **hptr, int key)
     }
     if (prev == NULL) // 1st element deletion
     {
-        h = deleteAtBeginning(&h);
+        val = deleteAtBeginning(&h);
     }
     else
     {                            // deleting at any other pos. except pos 1
         prev->link = curr->link; // before deletion --> prev->curr->next. after deleting curr --> prev->next
-        val = curr->link;
+        val = curr->data;
         free(curr);
     }
     return val;
+}
+
+Node *reverseLinkedList(Node *h)
+{
+    Node *curr = h, *prev = NULL, *next, *temp;
+    if (h == NULL)
+    {
+        printf("Empty List\n");
+        return h;
+    }
+    if (curr != NULL)
+    {
+        next = curr->link;
+        temp = next;
+    }
+    while (next != NULL)
+    {
+        // Reversing
+        curr->link = prev;
+        prev = curr;
+        curr = next;
+        next = next->link;
+    }
+    h = curr;
+    curr->link = prev;
+
+    return h;
 }
 
 void displayList(Node *head)
@@ -213,28 +255,94 @@ void displayList(Node *head)
 int main()
 {
     Node *head = NULL;
-    int num, value, choice;
+    int num, val, pos, ch;
 
-    printf("Enter the number of elements you want to insert initially: ");
-    scanf("%d", &num);
+    printf("Enter the elements of the SLL. Press -1 to stop\n");
+    while (1)
+    {
+        scanf("%d", &num);
+        head = insertAtEnd(head, num);
+        printf("Continue?\n");
+        scanf("%d", &ch);
+        if (ch == -1)
+            break;
+    }
 
-    head = createInitialList(num);
+    printf("The List:\n");
     displayList(head);
 
-    printf("Enter value to insert: ");
-    scanf("%d", &value);
-
-    head = insertAtBeginning(head, value);
-    displayList(head);
-
-    head = insertAtEnd(head, value);
-    displayList(head);
-
-    int pos;
-    printf("Enter pos & value\n");
-    scanf("%d%d", &pos, &value);
-    head = insertAtPosition(head, value, pos);
-    displayList(head);
+    while (1)
+    {
+        printf("Enter:\n 1. IAB\n 2. IAE\n 3. IAP\n 4. DAB\n 5. DAE\n 6. DAP\n 7. DBV\n 8. Reverse\n 9. Exit\n");
+        scanf("%d", &ch);
+        switch (ch)
+        {
+        case 1:
+            printf("Enter ele\n");
+            scanf("%d", &val);
+            head = insertAtBeginning(head, val);
+            displayList(head);
+            break;
+        case 2:
+            printf("Enter ele\n");
+            scanf("%d", &val);
+            head = insertAtEnd(head, val);
+            displayList(head);
+            break;
+        case 3:
+            printf("Enter ele. & pos.\n");
+            scanf("%d%d", &val, &pos);
+            head = insertAtPosition(head, val, pos);
+            displayList(head);
+            break;
+        case 4:
+            val = deleteAtBeginning(&head);
+            if (val != INT_MIN)
+            {
+                printf("Deleted Value = %d\n", val);
+                displayList(head);
+            }
+            break;
+        case 5:
+            val = deleteAtEnd(&head);
+            if (val != INT_MIN)
+            {
+                printf("Deleted Value = %d\n", val);
+                displayList(head);
+            }
+            break;
+        case 6:
+            printf("Enter position\n");
+            scanf("%d", &pos);
+            val = deleteAtPosition(&head, pos);
+            if (val != INT_MIN)
+            {
+                printf("Deleted Value = %d\n", val);
+                displayList(head);
+            }
+            break;
+        case 7:
+            printf("Enter value\n");
+            scanf("%d", &num);
+            val = deleteByValue(&head, num);
+            if (val != INT_MIN)
+            {
+                printf("Deleted Value = %d\n", val);
+                displayList(head);
+            }
+            break;
+        case 8:
+            head = reverseLinkedList(head);
+            if (head != NULL)
+                displayList(head);
+            break;
+        case 9:
+            printf("End of Program\n");
+            exit(0);
+        default:
+            printf("Wrong Choice!\n");
+        }
+    }
 
     return 0;
 }
