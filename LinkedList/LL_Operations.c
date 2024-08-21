@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 
 typedef struct node
 {
@@ -34,102 +35,168 @@ Node *insertAtEnd(Node *head, int val)
         if (head == NULL)
         {
             head = new;
+            return head;
         }
         else
         {
-            Node *temp = head;
-            while (temp->link != NULL)
+            Node *curr = head;
+            while (curr->link != NULL)
             {
-                temp = temp->link; // traversing the list
+                curr = temp->link; // traversing the list
             }
-            temp->link = new; // linking new entry to prev. node
+            curr->link = new; // linking new entry to prev. node
         }
+        return head;
     }
     else
     {
         printf("Memory Allocation failed\n");
         exit(0);
     }
-    return head;
 }
 
 Node *insertAtPosition(Node *head, int val, int pos)
 {
-    Node *new = (Node *)malloc(sizeof(Node));
-    if (new != NULL)
+    Node *curr = h;
+    int c = 0;
+    if (pos == 1)
     {
-        new->data = val;
-        new->link = NULL;
+        h = insertAtBeginning(h, val);
+        return h;
+    }
+    while (curr != NULL)
+    {
+        c++;
+        if (pos == c + 1)
+        {
+            Node *new = (Node *)malloc(sizeof(Node));
+            if (new == NULL)
+            {
+                printf("Memory Alloc. failed\n");
+                exit(0);
+            }
+            new->data = val;
+            new->link = curr->link; // updating pos. by creating new link and breaking down the old one
+            curr->link = new;
+        }
+        curr = curr->link; // traversal step
+    }
+    if (pos > c + 1 || pos <= 0)
+    {
+        printf("Invalid position\n");
+    }
+    return h;
+}
 
-        // If inserting at the beginning (position 1)
-        if (pos == 1)
-        {
-            new->link = head;
-            head = new;
-        }
-        else
-        {
-            Node *temp = head;
-            // Traverse to the node before the desired position
-            for (int i = 1; i < pos - 1 && temp != NULL; i++)
-            {
-                temp = temp->link;
-            }
-            // If position is beyond the current list length
-            if (temp == NULL)
-            {
-                printf("Position out of bounds\n");
-                free(new);
-            }
-            else
-            {
-                // Insert the new node
-                new->link = temp->link;
-                temp->link = new; // address of prev node
-            }
-        }
+int deleteAtBeginning(Node **hptr)
+{
+    Node *h = *hptr;
+    if (h == NULL)
+    {
+        printf("Empty List\n");
+        return INT_MIN;
     }
     else
     {
-        printf("Memory Allocation failed\n");
-        exit(0);
+
+        Node *temp = h;
+        h = h->link;
+        int v = temp->data;
+        free(temp);
+        *hptr = h;
+        return v;
     }
-    return head;
 }
 
-Node *createInitialList(int num)
+int deleteAtEnd(Node **hptr)
 {
-    Node *head = NULL;
-    Node *temp = NULL;
-    Node *new = NULL;
-    int value;
-
-    for (int i = 0; i < num; i++)
+    Node *curr = *hptr, *prev = NULL;
+    int val;
+    if (curr == NULL)
     {
-        printf("Enter value %d: ", i + 1);
-        scanf("%d", &value);
-        new = (Node *)malloc(sizeof(Node));
-        if (new != NULL)
-        {
-            new->data = value;
-            new->link = NULL;
-            if (head == NULL)
-            {
-                head = new;
-            }
-            else
-            {
-                temp->link = new;
-            }
-            temp = new;
-        }
-        else
-        {
-            printf("Memory Allocation failed\n");
-            exit(0);
-        }
+        printf("Empty List\n");
+        return INT_MIN;
     }
-    return head;
+    while (curr->link != NULL)
+    {
+        prev = curr;
+        curr = curr->link;
+    }
+    if (prev != NULL)
+    {
+        prev->link = NULL; // last node after deletion
+        val = curr->data;
+        free(curr); // deleting curr which stores last ele., after complete traversal
+    }
+    else
+    { // only one node edge case
+        *hptr = NULL;
+        val = curr->data;
+        free(curr);
+    }
+    return val;
+}
+
+int deleteAtPosition(Node **hptr, int pos)
+{
+    Node *h = *hptr, *curr = h, *prev = NULL;
+    int c = 0, val;
+    if (pos == 1)
+    {
+        val = deleteAtBeginning(&h);
+        return val;
+    }
+    while (curr != NULL)
+    {
+        c++;
+        if (c == pos)
+        {
+            prev->link = curr->link;
+            val = curr->data;
+            free(curr);
+        }
+        prev = curr;
+        curr = curr->link;
+    }
+    if (pos > c + 1 || pos <= 0)
+    {
+        printf("Invalid position\n");
+        return INT_MIN;
+    }
+    return val;
+}
+
+int deleteByValue(Node **hptr, int key)
+{
+    Node *h = *hptr, *curr = h, *prev = NULL;
+    int flag = 0, val;
+    while (curr != NULL)
+    {
+        if (curr->data == key)
+        {
+            flag = 1;
+            break;
+        }
+        // next node updates
+        prev = curr;
+        curr = curr->link;
+    }
+    if (flag == 0)
+    {
+        printf("Element not found\n");
+        return INT_MIN;
+    }
+    if (prev == NULL) // 1st element deletion
+    {
+        h = deleteAtBeginning(&h);
+    }
+    else
+    {                            // deleting at any other pos. except pos 1
+        prev->link = curr->link; // before deletion --> prev->curr->next. after deleting curr --> prev->next
+        val = curr->link;
+        free(curr);
+    }
+    return val;
 }
 
 void displayList(Node *head)
