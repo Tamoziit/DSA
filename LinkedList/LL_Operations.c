@@ -203,7 +203,7 @@ int deleteByValue(Node **hptr, int key)
     }
     if (prev == NULL) // 1st element deletion
     {
-        val = deleteAtBeginning(&h);
+        val = deleteAtBeginning(hptr);
     }
     else
     {                            // deleting at any other pos. except pos 1
