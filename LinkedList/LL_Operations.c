@@ -148,7 +148,7 @@ int deleteAtPosition(Node **hptr, int pos)
     }
     if (pos == 1)
     {
-        val = deleteAtBeginning(&h);
+        val = deleteAtBeginning(&h); //TODO: check with hptr instead of &h
         *hptr = h; // Update the head pointer
         return val;
     }

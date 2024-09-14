@@ -161,16 +161,34 @@ void reverse_DLL(Dnode **hptr, Dnode **tptr)
     *tptr = temp;
 }
 
-void print_DLL(Dnode *hptr)
+void print_DLL(Dnode *hptr, Dnode *tptr, int r)
 {
-    Dnode *temp = hptr;
-    printf("NULL->");
-    while (temp != NULL)
+    if (r == 1)
     {
-        printf("%d->", temp->data);
-        temp = temp->right;
+        Dnode *temp = hptr;
+        printf("NULL->");
+        while (temp != NULL)
+        {
+            printf("%d->", temp->data);
+            temp = temp->right;
+        }
+        printf("NULL\n");
     }
-    printf("NULL\n");
+    else if (r == -1)
+    {
+        Dnode *temp = tptr;
+        printf("NULL");
+        while (temp != NULL)
+        {
+            printf("<-%d", temp->data);
+            temp = temp->left;
+        }
+        printf("<-NULL\n");
+    }
+    else
+    {
+        printf("Wrong Choice\n");
+    }
 }
 
 int main()
@@ -190,7 +208,7 @@ int main()
     }
 
     printf("The list\n");
-    print_DLL(head);
+    print_DLL(head, tail, -1);
 
     while (1)
     {
@@ -202,13 +220,13 @@ int main()
             printf("Enter ele.\n");
             scanf("%d", &val);
             dll_insert_at_beginning(&head, &tail, val);
-            print_DLL(head);
+            print_DLL(head, tail, 1);
             break;
         case 2:
             printf("Enter ele.\n");
             scanf("%d", &val);
             dll_insert_at_end(&head, &tail, val);
-            print_DLL(head);
+            print_DLL(head, tail, 1);
             break;
         case 3:
             printf("Enter ele.\n");
@@ -216,7 +234,7 @@ int main()
             printf("Enter pos.\n");
             scanf("%d", &pos);
             ele = dll_insert_at_pos(&head, &tail, val, pos);
-            print_DLL(head);
+            print_DLL(head, tail, 1);
             break;
         case 6:
             printf("Enter pos\n");
@@ -224,7 +242,15 @@ int main()
             val = dll_delete_at_pos(&head, &tail, pos);
             if (val != INT_MIN)
                 printf("Deleted Value=%d\n", val);
-            print_DLL(head);
+            print_DLL(head, tail, 1);
+            break;
+        case 8: 
+            printf("Reversed List\n");
+            if(head != NULL && tail != NULL)
+                reverse_DLL(&head, &tail);
+            else
+                printf("Empty List\n");
+            print_DLL(head, tail, 1);
             break;
         case 9:
             printf("End of prog\n");
