@@ -89,6 +89,58 @@ int dll_insert_at_pos(Dnode **hptr, Dnode **tptr, int val, int pos)
     return 1; // success at insertion
 }
 
+int dll_delete_at_beginning(Dnode **hptr, Dnode **tptr)
+{
+    int val;
+    if (*hptr == NULL && *tptr == NULL)
+    {
+        printf("Empty List\n");
+        return INT_MIN;
+    }
+
+    Dnode *curr = *hptr;
+    if (*hptr == *tptr)
+    {
+        *hptr = *tptr = NULL;
+        val = curr->data;
+        free(curr);
+        return val;
+    }
+
+    Dnode *next = curr->right;
+    *hptr = curr->right;
+    next->left = NULL;
+    val = curr->data;
+    free(curr);
+    return val;
+}
+
+int dll_delete_at_end(Dnode **hptr, Dnode **tptr)
+{
+    int val;
+    if (*hptr == NULL && *tptr == NULL)
+    {
+        printf("Empty List\n");
+        return INT_MIN;
+    }
+
+    Dnode *curr = *tptr;
+    if (*hptr == *tptr)
+    {
+        *hptr = *tptr = NULL;
+        val = curr->data;
+        free(curr);
+        return val;
+    }
+
+    Dnode *prev = curr->left;
+    *tptr = curr->left;
+    prev->right = NULL;
+    val = curr->data;
+    free(curr);
+    return val;
+}
+
 int dll_delete_at_pos(Dnode **hptr, Dnode **tptr, int pos)
 {
     int val;
@@ -110,6 +162,7 @@ int dll_delete_at_pos(Dnode **hptr, Dnode **tptr, int pos)
         curr = curr->right;
         c++;
     }
+
     if (curr != NULL)
     {
         prev = curr->left;
@@ -117,7 +170,8 @@ int dll_delete_at_pos(Dnode **hptr, Dnode **tptr, int pos)
 
         if (prev == NULL) // delete 1st ele
         {
-            *hptr = curr->right;
+            val = dll_delete_at_beginning(hptr, tptr);
+            return val;
         }
         else
         {
@@ -126,7 +180,8 @@ int dll_delete_at_pos(Dnode **hptr, Dnode **tptr, int pos)
 
         if (next == NULL) // delete last ele
         {
-            *hptr = curr->left;
+            val = dll_delete_at_end(hptr, tptr);
+            return val;
         }
         else
         {
@@ -136,6 +191,57 @@ int dll_delete_at_pos(Dnode **hptr, Dnode **tptr, int pos)
     else
     {
         printf("Invalid pos\n");
+        return INT_MIN;
+    }
+
+    val = curr->data;
+    free(curr);
+    return val;
+}
+
+int dll_delete_by_value(Dnode **hptr, Dnode **tptr, int ele)
+{
+    int val;
+    if (*hptr == NULL && *tptr == NULL)
+    {
+        printf("Empty List\n");
+        return INT_MIN;
+    }
+
+    Dnode *curr = *hptr, *prev, *next;
+    while (curr != NULL && curr->data != ele)
+    {
+        curr = curr->right;
+    }
+
+    if (curr != NULL)
+    {
+        prev = curr->left;
+        next = curr->right;
+
+        if (prev == NULL) // delete 1st ele
+        {
+            val = dll_delete_at_beginning(hptr, tptr);
+            return val;
+        }
+        else
+        {
+            prev->right = curr->right;
+        }
+
+        if (next == NULL) // delete last ele
+        {
+            val = dll_delete_at_end(hptr, tptr);
+            return val;
+        }
+        else
+        {
+            next->left = curr->left;
+        }
+    }
+    else
+    {
+        printf("Element not found\n");
         return INT_MIN;
     }
 
@@ -208,11 +314,11 @@ int main()
     }
 
     printf("The list\n");
-    print_DLL(head, tail, -1);
+    print_DLL(head, tail, 1);
 
     while (1)
     {
-        printf("Enter:\n 1. IAB\n 2. IAE\n 3. IAP\n 4. DAB\n 5. DAE\n 6. DAP\n 7. DBV\n 8. Reverse\n 9. Exit\n");
+        printf("Enter:\n 1. IAB\n 2. IAE\n 3. IAP\n 4. DAB\n 5. DAE\n 6. DAP\n 7. DBV\n 8. Reverse\n 9. Bi-directional Printing\n 10. Exit\n");
         scanf("%d", &ch);
         switch (ch)
         {
@@ -236,6 +342,18 @@ int main()
             ele = dll_insert_at_pos(&head, &tail, val, pos);
             print_DLL(head, tail, 1);
             break;
+        case 4:
+            ele = dll_delete_at_beginning(&head, &tail);
+            if (ele != INT_MIN)
+                printf("Deleted value = %d\n", ele);
+            print_DLL(head, tail, 1);
+            break;
+        case 5:
+            ele = dll_delete_at_end(&head, &tail);
+            if (ele != INT_MIN)
+                printf("Deleted value = %d\n", ele);
+            print_DLL(head, tail, 1);
+            break;
         case 6:
             printf("Enter pos\n");
             scanf("%d", &pos);
@@ -244,15 +362,28 @@ int main()
                 printf("Deleted Value=%d\n", val);
             print_DLL(head, tail, 1);
             break;
-        case 8: 
+        case 7:
+            printf("Enter value\n");
+            scanf("%d", &ele);
+            val = dll_delete_by_value(&head, &tail, ele);
+            if (val != INT_MIN)
+                printf("Deleted Value=%d\n", val);
+            print_DLL(head, tail, 1);
+            break;
+        case 8:
             printf("Reversed List\n");
-            if(head != NULL && tail != NULL)
+            if (head != NULL && tail != NULL)
                 reverse_DLL(&head, &tail);
             else
                 printf("Empty List\n");
             print_DLL(head, tail, 1);
             break;
         case 9:
+            printf("Enter 1 to print from left->right, -1 for right->left\n");
+            scanf("%d", &ele);
+            print_DLL(head, tail, ele);
+            break;
+        case 10:
             printf("End of prog\n");
             exit(0);
         default:
