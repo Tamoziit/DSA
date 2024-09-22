@@ -63,6 +63,58 @@ int *selectionSort(int *arr, int n)
 	return arr;
 }
 
+int *cocktailShakerSort(int *arr, int n)
+{
+    int swapped = 1; // To track if a swap happened
+    int start = 0;
+    int end = n - 1;
+	int i, temp;
+
+    while (swapped)
+    {
+        swapped = 0;
+
+        // Forward pass: move the largest element to the end
+        for (i = start; i < end; i++)
+        {
+            if (arr[i] > arr[i + 1])
+            {
+                temp = arr[i];
+                arr[i] = arr[i + 1];
+                arr[i + 1] = temp;
+                swapped = 1;
+            }
+        }
+
+        // If no elements were swapped, the array is sorted
+        if (!swapped)
+            break;
+
+        // Reset the swapped flag for the backward pass
+        swapped = 0;
+
+        // Move the end pointer one element back, as the last element is in place
+        end--;
+
+        // Backward pass: move the smallest element to the start
+        for (i = end - 1; i >= start; i--)
+        {
+            if (arr[i] > arr[i + 1])
+            {
+                temp = arr[i];
+                arr[i] = arr[i + 1];
+                arr[i + 1] = temp;
+                swapped = 1;
+            }
+        }
+
+        // Move the start pointer one element forward, as the first element is in place
+        start++;
+    }
+
+	return arr;
+}
+
 int *maxHeapify(int *arr, int i, int size)
 {
 	int l = 2 * i + 1;
@@ -151,7 +203,7 @@ int main()
 	printf("The Array\n");
 	printArr(arr, x);
 
-	printf("Enter\n 1. Improved Bubble Sort\n 2. Insertion Sort\n 3. Selection Sort\n 4. Heap Sort\n 5. Count Sort\n 6. Exit\n");
+	printf("Enter\n 1. Improved Bubble Sort\n 2. Insertion Sort\n 3. Selection Sort\n 4. Cocktail Shaker Sort\n 5. Heap Sort\n 6. Count Sort\n 7. Exit\n");
 	scanf("%d", &ch);
 	switch (ch)
 	{
@@ -172,10 +224,15 @@ int main()
 		break;
 	case 4:
 		printf("Sorted Array:\n");
+		arr = cocktailShakerSort(arr, x);
+		printArr(arr, x);
+		break;	
+	case 5:
+		printf("Sorted Array:\n");
 		arr = heapSort(arr, x);
 		printArr(arr, x);
 		break;
-	case 6:
+	case 7:
 		printf("EOP\n");
 		exit(0);
 	default:
