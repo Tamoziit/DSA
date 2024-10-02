@@ -1,0 +1,24 @@
+Improved Bubble Sort
+No. of Comparison = 45
+1 1 2 3 6 7 17 17 18 18 
+
+Insertion Sort
+No. of Comparison = 30
+1 1 2 3 6 7 17 17 18 18 
+
+Selection Sort
+No. of Comparison = 45
+1 1 2 3 6 7 17 17 18 18 
+
+Cocktail Shaker Sort
+No. of Comparison = 42
+1 1 2 3 6 7 17 17 18 18 
+
+Heap Sort
+No. of Comparison = 62
+1 1 2 3 6 7 17 17 18 18 
+
+Counting Sort
+No. of Comparison = 0
+1 1 2 3 6 7 17 17 18 18 
+
