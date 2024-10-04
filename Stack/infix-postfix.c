@@ -78,7 +78,7 @@ int emptyStack(Stack *sptr)
 void printCharStack(Stack *sptr, int l)
 {
     int i;
-    for (i = 0; i < l; i++)
+    for (i = l-1; i >= 0; i--)
     {
         printf("%c ", sptr->dataStk[i]);
     }
@@ -88,7 +88,7 @@ void printCharStack(Stack *sptr, int l)
 void printFloatStack(eStack *sptr, int l)
 {
     int i;
-    for (i = 0; i < l; i++)
+    for (i = l-1; i >= 0; i--)
     {
         printf("%f ", sptr->dataStk[i]);
     }
@@ -116,4 +116,104 @@ char associativity(char c)
         return 'R';
     else
         return 'L';
+}
+
+char *infixToPostfix(char *infix, Stack *sptr)
+{
+    int len = strlen(infix);
+    char c, top, x;
+    int i, l = 0;
+    char *postfix = (char *)malloc(len * sizeof(char));
+    int j = 0;
+    sptr->top = -1;
+
+    for (i = 0; i < len; i++)
+    {
+        c = infix[i];
+        if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'))
+        { // operand
+            postfix[j] = c;
+            j++;
+        }
+
+        else if (c == '(') // bracket case handling
+        {
+            push(sptr, c);
+            l++;
+        }
+
+        else if (c == ')') // bracket case resolution
+        {
+            while (!emptyStack(sptr) && (top = pop(sptr)) != '(')
+            {
+                postfix[j] = top;
+                j++;
+            }
+            if (top != '(')
+            {
+                printf("Erronous Infix Exp\n");
+                return NULL;
+            }
+        }
+
+        else // operator
+        {
+            while (!emptyStack(sptr))
+            {
+                top = pop(sptr);
+                l--;
+                if ((precedence(c) < precedence(top)) || (precedence(c) == precedence(top) && associativity(top) == 'L'))
+                {
+                    postfix[j] = top;
+                    j++;
+                }
+                else
+                {
+                    push(sptr, top);
+                    l++;
+                    break;
+                }
+            }
+            push(sptr, c);
+            l++;
+        }
+
+        printCharStack(sptr, l);
+    }
+
+    while (!emptyStack(sptr))
+    {
+        x = pop(sptr);
+        l--;
+        postfix[j] = x;
+        j++;
+        printCharStack(sptr, l);
+    }
+
+    postfix[j] = '\0';
+    return postfix;
+}
+
+int main()
+{
+    int n;
+    printf("Enter the length of postfix exp.\n");
+    scanf("%d", &n);
+    char *infix = (char *)malloc(n * sizeof(char));
+    printf("Enter the infix exp.\n");
+    scanf("%s", infix);
+    printf("%s", infix);
+
+    Stack s;
+    s.capacity = n;
+    s.dataStk = (char *)malloc(s.capacity * sizeof(char));
+    char *postfix = NULL;
+
+    postfix = infixToPostfix(infix, &s);
+    if (postfix != NULL)
+    {
+        printf("Postfix exp. = %s\n", postfix);
+    }
+
+    return 0;
 }
