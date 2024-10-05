@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 typedef struct stack
 {
@@ -78,7 +79,7 @@ int emptyStack(Stack *sptr)
 void printCharStack(Stack *sptr, int l)
 {
     int i;
-    for (i = l-1; i >= 0; i--)
+    for (i = l - 1; i >= 0; i--)
     {
         printf("%c ", sptr->dataStk[i]);
     }
@@ -88,7 +89,7 @@ void printCharStack(Stack *sptr, int l)
 void printFloatStack(eStack *sptr, int l)
 {
     int i;
-    for (i = l-1; i >= 0; i--)
+    for (i = l - 1; i >= 0; i--)
     {
         printf("%f ", sptr->dataStk[i]);
     }
@@ -194,6 +195,58 @@ char *infixToPostfix(char *infix, Stack *sptr)
     return postfix;
 }
 
+float postfixEvaluator(eStack *sptr, char *postfix)
+{
+    int i = 0, l = 0;
+    float op1, op2, x, res = 0.0;
+    char c;
+
+    while ((c = postfix[i]) != '\0')
+    {
+        if (c != '+' && c != '-' && c != '*' && c != '/' && c != '^')
+        {
+            x = c - '0';
+            ePush(sptr, x);
+            l++;
+        }
+        else
+        {
+            op2 = ePop(sptr);
+            op1 = ePop(sptr);
+            l -= 2;
+
+            switch (c)
+            {
+            case '+':
+                res = op1 + op2;
+                break;
+            case '-':
+                res = op1 - op2;
+                break;
+            case '*':
+                res = op1 * op2;
+                break;
+            case '/':
+                res = op1 / op2;
+                break;
+            case '^':
+                res = pow(op1, op2);
+                break;
+            default:
+                printf("Operator not listed\n");
+                exit(0);
+            }
+
+            ePush(sptr, res);
+            l++;
+        }
+        i++;
+        printFloatStack(sptr, l);
+    }
+
+    return res;
+}
+
 int main()
 {
     int n;
@@ -202,18 +255,25 @@ int main()
     char *infix = (char *)malloc(n * sizeof(char));
     printf("Enter the infix exp.\n");
     scanf("%s", infix);
-    printf("%s", infix);
+    printf("Infix exp. = %s\n", infix);
 
+    // Stack objects
     Stack s;
     s.capacity = n;
     s.dataStk = (char *)malloc(s.capacity * sizeof(char));
-    char *postfix = NULL;
+    eStack sp;
+    sp.capacity = n;
+    sp.dataStk = (float *)malloc(sp.capacity * sizeof(float));
 
+    char *postfix = NULL;
     postfix = infixToPostfix(infix, &s);
     if (postfix != NULL)
     {
         printf("Postfix exp. = %s\n", postfix);
     }
+
+    float res = postfixEvaluator(&sp, postfix);
+    printf("Result = %f\n", res);
 
     return 0;
 }
