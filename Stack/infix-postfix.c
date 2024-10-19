@@ -275,5 +275,8 @@ int main()
     float res = postfixEvaluator(&sp, postfix);
     printf("Result = %f\n", res);
 
+    free(infix);
+    free(postfix);
+
     return 0;
 }
