@@ -85,14 +85,30 @@ void display(nzEle *sparr, int row, int col)
 int main()
 {
     int row1, row2, col1, col2, nzcount1, nzcount2;
-    printf("Enter no. of rows & cols. for array 1\n");
-    scanf("%d%d", &row1, &col1);
-    printf("Enter no. of non-zero elements for array 1\n");
-    scanf("%d", &nzcount1);
-    printf("Enter no. of rows & cols. for array 2\n");
-    scanf("%d%d", &row2, &col2);
-    printf("Enter no. of non-zero elements for array 2\n");
-    scanf("%d", &nzcount2);
+    int x, y;
+    while (1)
+    {
+        printf("Enter no. of rows & cols. for array 1\n");
+        scanf("%d%d", &row1, &col1);
+        printf("Enter no. of non-zero elements for array 1\n");
+        scanf("%d", &nzcount1);
+        printf("Enter no. of rows & cols. for array 2\n");
+        scanf("%d%d", &row2, &col2);
+        printf("Enter no. of non-zero elements for array 2\n");
+        scanf("%d", &nzcount2);
+
+        x = ((row1 * col1) + (row2 * col2)) * sizeof(int);
+        y = (nzcount1 + nzcount2) * sizeof(nzEle);
+
+        if (y > x)
+        {
+            printf("Not a Sparse Matrix, Enter again\n");
+        }
+        else
+        {
+            break;
+        }
+    }
 
     nzEle *p1 = (nzEle *)malloc((nzcount1 + 1) * sizeof(nzEle));
     p1[0].x = nzcount1;

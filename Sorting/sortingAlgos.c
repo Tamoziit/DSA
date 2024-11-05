@@ -239,7 +239,7 @@ void printArr(int *arr, int n)
 
 int main()
 {
-	int i, *arr, *res, n, ch, comps;
+	int i=0, *arr, *res, n, ch, comps;
 	FILE *f1;
 	f1 = fopen("C:\\Users\\Tamojit\\Desktop\\DSA\\sorting\\input.txt", "r");
 	if (f1 != NULL)
