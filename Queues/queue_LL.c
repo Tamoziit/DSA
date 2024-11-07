@@ -48,12 +48,19 @@ int deQueue(QL **front)
 void printQueue(QL *front)
 {
     QL *curr = front;
-    while(curr != NULL)
+    if (curr == NULL)
     {
-        printf("%d ", curr->data);
-        curr = curr->link;
+        printf("Empty Queue\n");
     }
-    printf("\n");
+    else
+    {
+        while (curr != NULL)
+        {
+            printf("%d ", curr->data);
+            curr = curr->link;
+        }
+        printf("\n");
+    }
 }
 
 int main()
@@ -78,8 +85,8 @@ int main()
             if (val != INT_MIN)
             {
                 printf("Deleted Value = %d\n", val);
+                printQueue(front);
             }
-            printQueue(front);
             break;
         case 3:
             printf("EOP\n");

@@ -8,7 +8,7 @@ typedef struct stack
     struct stack *link;
 } Stack;
 
-Stack *insertAtBeginning(Stack *top, int val)
+Stack *push(Stack *top, int val)
 {
     Stack *new = (Stack *)malloc(sizeof(Stack));
     if (new != NULL)
@@ -25,7 +25,7 @@ Stack *insertAtBeginning(Stack *top, int val)
     return top;
 }
 
-int deleteAtBeginning(Stack **top)
+int pop(Stack **top)
 {
     Stack *h = *top;
     if (h == NULL)
@@ -35,7 +35,6 @@ int deleteAtBeginning(Stack **top)
     }
     else
     {
-
         Stack *temp = h;
         h = h->link;
         int v = temp->data;
@@ -70,11 +69,11 @@ int main()
         case 1:
             printf("Enter ele\n");
             scanf("%d", &val);
-            top = insertAtBeginning(top, val);
+            top = push(top, val);
             displayList(top);
             break;
         case 2:
-            val = deleteAtBeginning(&top);
+            val = pop(&top);
             if (val != INT_MIN)
             {
                 printf("Deleted Value = %d\n", val);
