@@ -51,9 +51,10 @@ Node *insertAtEnd(Node *head, int val)
     else
     {
         Node *curr = head;
-        while (curr != NULL)
+        Node *prev = NULL;
+        while (curr->link != NULL)
             curr = curr->link;
-
+        
         curr->link = new;
         new->link = NULL;
     }
