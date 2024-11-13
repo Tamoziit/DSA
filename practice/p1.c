@@ -61,6 +61,39 @@ Node *insertAtEnd(Node *head, int val)
     return head;
 }
 
+Node *insertAtPos(Node *h, int val, int pos)
+{
+    Node *curr = h;
+    int c = 0;
+    if (pos == 1)
+    {
+        h = insertAtBeginning(h, val);
+        return h;
+    }
+    while (curr != NULL)
+    {
+        c++;
+        if (pos == c + 1)
+        {
+            Node *new = (Node *)malloc(sizeof(Node));
+            if (new == NULL)
+            {
+                printf("Memory Alloc. failed\n");
+                exit(0);
+            }
+            new->data = val;
+            new->link = curr->link;
+            curr->link = new;
+        }
+        curr = curr->link;
+    }
+    if (pos > c + 1 || pos <= 0)
+    {
+        printf("Invalid position\n");
+    }
+    return h;
+}
+
 void printList(Node *head)
 {
     if (head == NULL)
@@ -80,7 +113,7 @@ void printList(Node *head)
 int main()
 {
     Node *head = NULL;
-    int ch, ele, val;
+    int ch, ele, val, pos;
 
     while (1)
     {
@@ -98,6 +131,14 @@ int main()
             printf("Enter value\n");
             scanf("%d", &ele);
             head = insertAtEnd(head, ele);
+            printList(head);
+            break;
+        case 3:
+            printf("Enter value\n");
+            scanf("%d", &ele);
+            printf("Enter position\n");
+            scanf("%d", &pos);
+            head = insertAtPos(head, ele, pos);
             printList(head);
             break;
         case 9:
