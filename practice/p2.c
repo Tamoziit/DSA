@@ -2,49 +2,58 @@
 #include <stdlib.h>
 #include <limits.h>
 
-typedef struct dnode {
+typedef struct dnode
+{
     int data;
     struct dnode *left;
     struct dnode *right;
 } Dnode;
 
-void insertAtBeginning(Dnode **h, Dnode **t, int val) {
-    Dnode *new = (Dnode*)malloc(sizeof(Dnode));
-    if(new == NULL) {
+void insertAtBeginning(Dnode **h, Dnode **t, int val)
+{
+    Dnode *new = (Dnode *)malloc(sizeof(Dnode));
+    if (new == NULL)
+    {
         printf("Memory Alloc. Failed\n");
         exit(0);
     }
     new->data = val;
 
-    if(*h == NULL && *t == NULL) {
+    if (*h == NULL && *t == NULL)
+    {
         *h = new;
         *t = new;
-        
+
         new->left = NULL;
         new->right = NULL;
-    } else {
+    }
+    else
+    {
         new->right = *h;
         new->left = NULL;
-        (*h)->left=new;
+        (*h)->left = new;
         *h = new;
     }
 }
 
-int deleteAtEnd(Dnode **h, Dnode **t) {
-    if(*h == NULL && *t == NULL) {
+int deleteAtEnd(Dnode **h, Dnode **t)
+{
+    if (*h == NULL && *t == NULL)
+    {
         printf("Empty List\n");
         return INT_MIN;
     }
-    Dnode *tail,*head,*curr,*prev;
+    Dnode *tail, *head, *curr, *prev;
     int val;
-    tail=*t;
-    head=*h;
+    tail = *t;
+    head = *h;
     curr = tail;
     val = curr->data;
-    
-    if(*h==*t){
-        *h=NULL;
-        *t=NULL;
+
+    if (*h == *t)
+    {
+        *h = NULL;
+        *t = NULL;
         free(curr);
         return val;
     }
@@ -52,29 +61,37 @@ int deleteAtEnd(Dnode **h, Dnode **t) {
     prev->right = NULL;
     tail = prev;
     free(curr);
-    *t=tail;
+    *t = tail;
     return val;
 }
 
-void printList(Dnode *h, Dnode *t, int index) {
-    if(index == 1) {
+void printList(Dnode *h, Dnode *t, int index)
+{
+    if (index == 1)
+    {
         Dnode *curr = h;
         printf("NULL");
-        while(curr != NULL) {
+        while (curr != NULL)
+        {
             printf("<-%d->", curr->data);
             curr = curr->right;
         }
         printf("NULL\n");
-    } else if(index == -1) {
+    }
+    else if (index == -1)
+    {
         Dnode *curr = t;
         printf("NULL");
-        while(curr != NULL) {
+        while (curr != NULL)
+        {
             printf("<-%d->", curr->data);
             curr = curr->left;
         }
 
         printf("NULL\n");
-    } else {
+    }
+    else
+    {
         printf("Wrong Choice!\n");
     }
 }
@@ -98,7 +115,7 @@ int main()
             break;
         case 2:
             val = deleteAtEnd(&head, &tail);
-            if(val != INT_MIN)
+            if (val != INT_MIN)
             {
                 printf("Deleted value = %d\n", val);
                 printList(head, tail, 1);

@@ -54,7 +54,7 @@ Node *insertAtEnd(Node *head, int val)
         Node *prev = NULL;
         while (curr->link != NULL)
             curr = curr->link;
-        
+
         curr->link = new;
         new->link = NULL;
     }
@@ -94,24 +94,30 @@ Node *insertAtPos(Node *h, int val, int pos)
     return h;
 }
 
-int deleteAtEnd(Node **h) {
-    if(*h == NULL) {
+int deleteAtEnd(Node **h)
+{
+    if (*h == NULL)
+    {
         printf("Empty List\n");
         return INT_MIN;
     }
 
     Node *curr = *h, *prev = NULL;
     int val;
-    while(curr->link != NULL) {
+    while (curr->link != NULL)
+    {
         prev = curr;
         curr = curr->link;
     }
-    if(prev == NULL) {
+    if (prev == NULL)
+    {
         val = curr->data;
         free(curr);
         *h = NULL;
         return val;
-    } else {
+    }
+    else
+    {
         prev->link = NULL;
         val = curr->data;
         free(curr);
@@ -168,7 +174,7 @@ int main()
             break;
         case 4:
             val = deleteAtEnd(&head);
-            if(val != INT_MIN)
+            if (val != INT_MIN)
             {
                 printf("Deleted value = %d\n", val);
                 printList(head);
