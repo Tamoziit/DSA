@@ -94,6 +94,31 @@ Node *insertAtPos(Node *h, int val, int pos)
     return h;
 }
 
+int deleteAtEnd(Node **h) {
+    if(*h == NULL) {
+        printf("Empty List\n");
+        return INT_MIN;
+    }
+
+    Node *curr = *h, *prev = NULL;
+    int val;
+    while(curr->link != NULL) {
+        prev = curr;
+        curr = curr->link;
+    }
+    if(prev == NULL) {
+        val = curr->data;
+        free(curr);
+        *h = NULL;
+        return val;
+    } else {
+        prev->link = NULL;
+        val = curr->data;
+        free(curr);
+        return val;
+    }
+}
+
 void printList(Node *head)
 {
     if (head == NULL)
@@ -117,7 +142,7 @@ int main()
 
     while (1)
     {
-        printf("Enter\n 1. IAB\n 2. IAE\n 3. IAP\n 9. Exit\n");
+        printf("Enter\n 1. IAB\n 2. IAE\n 3. IAP\n 4. Delete last node\n 9. Exit\n");
         scanf("%d", &ch);
         switch (ch)
         {
@@ -140,6 +165,14 @@ int main()
             scanf("%d", &pos);
             head = insertAtPos(head, ele, pos);
             printList(head);
+            break;
+        case 4:
+            val = deleteAtEnd(&head);
+            if(val != INT_MIN)
+            {
+                printf("Deleted value = %d\n", val);
+                printList(head);
+            }
             break;
         case 9:
             printf("EOP\n");
