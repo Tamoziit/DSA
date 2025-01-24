@@ -22,7 +22,7 @@ typedef struct graph
 void enqueue(int n)
 {
     queue[++rear] = n;
-    if(rear == 0)
+    if (rear == 0)
         front = 0;
     count++;
 }
@@ -37,7 +37,7 @@ void printQueue()
 {
     int i;
     printf("The Queue: ");
-    for(i=front; i<=rear; i++)
+    for (i = front; i <= rear; i++)
         printf("%d ", queue[i]);
     printf("\n");
 }
@@ -89,6 +89,7 @@ void printGraph(Graph *graph)
         }
         printf(" NULL\n");
     }
+    free(temp);
 }
 
 void directedBfs(Graph *graph, int s, char *color, int *d, int *pi)
@@ -97,9 +98,9 @@ void directedBfs(Graph *graph, int s, char *color, int *d, int *pi)
     printf("\nEvaluating BFS\n");
     Node *temp;
 
-    for(v=0; v< graph->numVertices; v++)
+    for (v = 0; v < graph->numVertices; v++)
     {
-        if(v != s)
+        if (v != s)
         {
             color[v] = 'w';
             d[v] = 9999; // inf.
@@ -111,16 +112,16 @@ void directedBfs(Graph *graph, int s, char *color, int *d, int *pi)
     pi[s] = -1;
     enqueue(s);
 
-    while(count != 0)
+    while (count != 0)
     {
         v = queue[front];
         printf("Exploring vertex: %d\n", v);
         printQueue();
-        
+
         temp = graph->adjList[v];
-        while(temp)
+        while (temp)
         {
-            if(color[temp->vertex] == 'w')
+            if (color[temp->vertex] == 'w')
             {
                 color[temp->vertex] = 'g';
                 d[temp->vertex] = d[v] + 1;
@@ -132,13 +133,14 @@ void directedBfs(Graph *graph, int s, char *color, int *d, int *pi)
         color[v] = 'b';
         dequeue();
     }
+    free(temp);
 }
 
 void printPath(Graph *graph, int s, int v, int *pi)
 {
-    if(v == s)
+    if (v == s)
         printf(" %d ", s);
-    else if(pi[v] == -1)
+    else if (pi[v] == -1)
         printf("No path from %d to %d exists", s, v);
     else
     {
@@ -180,9 +182,9 @@ int main()
     for (v = 0; v < graph->numVertices; v++)
         printf("\n  %d       %c      %d         %d\n", v, color[v], d[v], pi[v]);
     printf("\nPredecessor Subgraph\n");
-    for(v = 0; v< graph->numVertices; v++)
+    for (v = 0; v < graph->numVertices; v++)
     {
-        if(v != s)
+        if (v != s)
         {
             printPath(graph, s, v, pi);
             printf("\n");
